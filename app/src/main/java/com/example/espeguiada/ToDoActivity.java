@@ -104,15 +104,15 @@ public class ToDoActivity extends Activity {
             //Init local storage
             initLocalStore().get();
 
-            mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
+            //mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
 
             // Create an adapter to bind the items with the view
-            mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);
-            ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
-            listViewToDo.setAdapter(mAdapter);
+            //mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);
+            //ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
+            //listViewToDo.setAdapter(mAdapter);
 
             // Load the items from the Mobile Service
-            refreshItemsFromTable();
+            //refreshItemsFromTable();
 
         } catch (MalformedURLException e) {
             createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
