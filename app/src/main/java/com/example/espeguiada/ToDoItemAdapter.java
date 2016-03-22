@@ -1,4 +1,4 @@
-package com.example.guiaespe;
+package com.example.espeguiada;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.guiaespe;
+package com.example.espeguiada;
 
 /**
  * Represents an item in a ToDo list

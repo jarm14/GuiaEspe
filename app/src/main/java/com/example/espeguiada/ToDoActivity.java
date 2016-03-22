@@ -1,4 +1,4 @@
-package com.example.guiaespe;
+package com.example.espeguiada;
 
 
 import java.net.MalformedURLException;
@@ -91,7 +91,7 @@ public class ToDoActivity extends Activity {
 
             // Mobile Service URL and key
             mClient = new MobileServiceClient(
-                    "https://guiaespe.azurewebsites.net",
+                    "https://espeguiada.azurewebsites.net",
                     this).withFilter(new ProgressFilter());
 
             // Get the Mobile Service Table instance to use
