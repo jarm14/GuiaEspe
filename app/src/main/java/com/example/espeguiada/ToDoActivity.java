@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -41,6 +42,11 @@ import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSy
 import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperations.*;
 
 public class ToDoActivity extends Activity {
+
+
+    HashMap<String,List<String>> sections;
+    List<String> subsections;
+    ExpandableListView exp_sections;
 
     /**
      * Mobile Service Client reference
