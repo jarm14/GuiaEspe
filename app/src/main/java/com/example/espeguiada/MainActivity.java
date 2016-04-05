@@ -1,6 +1,7 @@
 package com.example.espeguiada;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,16 @@ import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperati
 public class MainActivity extends Activity {
 
 
-    HashMap<String,List<String>> sections;
-    List<String> subsections;
+    HashMap<String,List<String>> subSections;
+    List<String> sections;
     ExpandableListView exp_sections;
+    List<String>rectorado;
+    List<String>viceAdm;
+    List<String>viceDoc;
+    List<String>viceInv;
+    List<String>viceAcad;
+    List<String>departamentos;
+    List<String>otros;
 
     /**
      * Mobile Service Client reference
@@ -97,6 +105,14 @@ public class MainActivity extends Activity {
 
         // Initialize the progress bar
         mProgressBar.setVisibility(ProgressBar.GONE);
+
+        rectorado = new ArrayList<String>();
+        viceAcad = new ArrayList<String>();
+        viceAdm = new ArrayList<String>();
+        viceDoc = new ArrayList<String>();
+        viceInv = new ArrayList<String>();
+        departamentos = new ArrayList<String>();
+        otros = new ArrayList<String>();
 
         try {
             // Create the Mobile Service Client instance, using the provided
@@ -319,6 +335,45 @@ public class MainActivity extends Activity {
         return mSubSeccionTable.select().execute().get();
         /*return mSeccionTable.where().field("complete").
                 eq(val(false)).execute().get();*/
+    }
+
+    private void SeparateLists()
+    {
+        try {
+            List<SECCION> itemsSeccion = refreshItemsSeccionTable();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+           final List<SUBSECCION> itemsSubSeccion = refreshItemsSubSeccionTable();
+
+            for(SUBSECCION items: itemsSubSeccion)
+            {
+                switch (items.getSEC_ID())
+                {
+                    case 1:
+                        rectorado.add(items.getSUB_NOMBRE().toString());
+                    case 2:
+                        viceAcad.add(items.getSUB_NOMBRE().toString());
+                    case 3:
+                        viceDoc.add(items.getSUB_NOMBRE().toString());
+                    case 4:
+                        departamentos.add(items.getSUB_NOMBRE().toString());
+                    case 5:
+                        viceInv.add(items.getSUB_NOMBRE().toString());
+                    case 6:
+                        viceAcad.add(items.getSUB_NOMBRE().toString());
+                    case 7:
+                        otros.add(items.getSUB_NOMBRE().toString());
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     //Offline Sync
