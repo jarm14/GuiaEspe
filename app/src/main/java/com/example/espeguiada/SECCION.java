@@ -29,7 +29,7 @@ public class SECCION {
      * @param id
      *            The item id
      */
-    
+
     public SECCION(int id, String nombre, String descripcion) {
         this.SEC_ID=id;
         this.SEC_NOMBRE=nombre;
