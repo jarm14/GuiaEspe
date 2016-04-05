@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity {
     HashMap<String,List<String>> subSections;
     List<String> sections;
     ExpandableListView exp_sections;
+    ExpandableListAdapter listAdapter;
     List<String>rectorado;
     List<String>viceAdm;
     List<String>viceDoc;
@@ -72,7 +74,7 @@ public class MainActivity extends Activity {
 
     //Offline Sync
     /**
-     * Mobile Service Table used to access and Sync data
+     * Mobile Service Table used to acce/home/adrianss and Sync data
      */
     //private MobileServiceSyncTable<ToDoItem> mToDoTable;
 
@@ -148,6 +150,12 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             createAndShowDialog(e, "Error");
         }
+
+        exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
+        //SeparateLists();
+        prepareListData();
+        listAdapter=new SECCION_adapter(sections, subSections, this);
+        exp_sections.setAdapter(listAdapter);
     }
 
     /**
@@ -240,7 +248,10 @@ public class MainActivity extends Activity {
         final ToDoItem item = new ToDoItem();
 
         item.setText(mTextNewToDo.getText().toString());
-        item.setComplete(false);
+        item.setComplete(false);subSections.put(sections.get(7),viceAcad);
+        subSections.put(sections.get(8),viceAcad);
+
+        subSections.put(sections.get(11),viceAcad);
 
         // Insert the new item
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
@@ -339,13 +350,7 @@ public class MainActivity extends Activity {
 
     private void SeparateLists()
     {
-        try {
-            List<SECCION> itemsSeccion = refreshItemsSeccionTable();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         try {
            final List<SUBSECCION> itemsSubSeccion = refreshItemsSubSeccionTable();
 
@@ -356,7 +361,7 @@ public class MainActivity extends Activity {
                     case 1:
                         rectorado.add(items.getSUB_NOMBRE().toString());
                     case 2:
-                        viceAcad.add(items.getSUB_NOMBRE().toString());
+                        viceAdm.add(items.getSUB_NOMBRE().toString());
                     case 3:
                         viceDoc.add(items.getSUB_NOMBRE().toString());
                     case 4:
@@ -374,6 +379,42 @@ public class MainActivity extends Activity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void prepareListData() {
+        sections = new ArrayList<String>();
+        subSections = new HashMap<String, List<String>>();
+
+        /*try {
+            List<SECCION> itemsSeccion=refreshItemsSeccionTable();
+            for(SECCION items:itemsSeccion){
+                sections.add(items.getSEC_NOMBRE());
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        sections.add("Rectorado");
+        sections.add("Vicerectorado Administrativo");
+
+        rectorado.add("Honorable consejo universitario");
+        rectorado.add("Secretaría general");
+        viceAdm.add("Unidad de Talento humano");
+        viceAdm.add("Unidad Financiera");
+
+        subSections.put(sections.get(0),rectorado);
+        subSections.put(sections.get(1),viceAdm);
+        //subSections.put(sections.get(2),viceDoc);
+        //subSections.put(sections.get(3),departamentos);
+        //subSections.put(sections.get(4),viceInv);
+        //subSections.put(sections.get(5),viceAcad);
+        //subSections.put(sections.get(6),otros);
+
+
+
+
     }
 
     //Offline Sync
