@@ -41,13 +41,17 @@
      </LinearLayout>
 
     <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        tools:context=".MainActivity">
+
 
         <ExpandableListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/exp_Sections"
+            android:id="@+id/expandableListView"
             android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
             android:divider="#A4CF39"
             android:dividerHeight="0.5dp"/>
