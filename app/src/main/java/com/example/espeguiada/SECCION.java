@@ -16,7 +16,6 @@ public class SECCION {
 
     public SECCION(){}
 
-<<<<<<< HEAD
     @Override
     public String toString() {
         return getSEC_NOMBRE();
@@ -30,16 +29,11 @@ public class SECCION {
      * @param id
      *            The item id
      */
-    public SECCION(String nombre, int id) {
-        this.setSEC_NOMBRE(nombre);
-        this.setSEC_ID(id);
-=======
+    
     public SECCION(int id, String nombre, String descripcion) {
         this.SEC_ID=id;
         this.SEC_NOMBRE=nombre;
         this.SEC_DESCRIPCION=descripcion;
-
->>>>>>> origin/master
     }
 
     public int getSEC_ID() {
