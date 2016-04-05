@@ -11,6 +11,12 @@ public class SECCION {
 
     public SECCION(){}
 
+    public SECCION(int id, String nombre, String descripcion) {
+        this.SEC_ID=id;
+        this.SEC_NOMBRE=nombre;
+        this.SEC_DESCRIPCION=descripcion;
+
+    }
 
     public int getSEC_ID() {
         return SEC_ID;
