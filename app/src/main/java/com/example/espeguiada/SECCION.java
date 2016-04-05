@@ -5,12 +5,34 @@ package com.example.espeguiada;
  */
 public class SECCION {
 
+    @com.google.gson.annotations.SerializedName("SEC_ID")
     private int SEC_ID;
+
+    @com.google.gson.annotations.SerializedName("SEC_NOMBRE")
     private String SEC_NOMBRE;
+
+    @com.google.gson.annotations.SerializedName("SEC_DESCRIPCION")
     private String SEC_DESCRIPCION;
 
     public SECCION(){}
 
+    @Override
+    public String toString() {
+        return getSEC_NOMBRE();
+    }
+
+    /**
+     * Initializes a new ToDoItem
+     *
+     * @param nombre
+     *            The item nombre
+     * @param id
+     *            The item id
+     */
+    public SECCION(String nombre, int id) {
+        this.setSEC_NOMBRE(nombre);
+        this.setSEC_ID(id);
+    }
 
     public int getSEC_ID() {
         return SEC_ID;

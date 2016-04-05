@@ -1,6 +1,5 @@
 package com.example.espeguiada;
 
-
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,8 +38,11 @@ import com.microsoft.windowsazure.mobileservices.table.sync.localstore.ColumnDat
 import com.microsoft.windowsazure.mobileservices.table.sync.localstore.MobileServiceLocalStoreException;
 import com.microsoft.windowsazure.mobileservices.table.sync.localstore.SQLiteLocalStore;
 import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSyncHandler;
+import android.content.Context;
+
 
 import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperations.*;
+
 
 public class ToDoActivity extends Activity {
 
@@ -56,7 +59,8 @@ public class ToDoActivity extends Activity {
     /**
      * Mobile Service Table used to access data
      */
-    private MobileServiceTable<ToDoItem> mToDoTable;
+    private MobileServiceTable<SECCION> mSeccionTable;
+    private MobileServiceTable<SUBSECCION> mSubSeccionTable;
 
     //Offline Sync
     /**
@@ -68,6 +72,8 @@ public class ToDoActivity extends Activity {
      * Adapter to sync the items list with the view
      */
     private ToDoItemAdapter mAdapter;
+
+    private SeccionAdapter SeccionAdapter;
 
     /**
      * EditText containing the "New To Do" text
@@ -102,7 +108,8 @@ public class ToDoActivity extends Activity {
 
             // Get the Mobile Service Table instance to use
 
-            mToDoTable = mClient.getTable(ToDoItem.class);
+            mSeccionTable = mClient.getTable(SECCION.class);
+            mSubSeccionTable = mClient.getTable(SUBSECCION.class);
 
             // Offline Sync
             //mToDoTable = mClient.getSyncTable("ToDoItem", ToDoItem.class);
@@ -122,7 +129,7 @@ public class ToDoActivity extends Activity {
 
         } catch (MalformedURLException e) {
             createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
-        } catch (Exception e){
+        } catch (Exception e) {
             createAndShowDialog(e, "Error");
         }
     }
@@ -139,21 +146,21 @@ public class ToDoActivity extends Activity {
     /**
      * Select an option from the menu
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    /*@Override*/
+    /*public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             refreshItemsFromTable();
         }
 
         return true;
-    }
+    }*/
 
     /**
      * Mark an item as completed
      *
      * @param item
      *            The item to mark
-     */
+     *
     public void checkItem(final ToDoItem item) {
         if (mClient == null) {
             return;
@@ -186,16 +193,20 @@ public class ToDoActivity extends Activity {
 
         runAsyncTask(task);
 
-    }
+    }*/
 
     /**
      * Mark an item as completed in the Mobile Service Table
      *
-     * @param item
+     * @param SeccionItem
      *            The item to mark
      */
-    public void checkItemInTable(ToDoItem item) throws ExecutionException, InterruptedException {
-        mToDoTable.update(item).get();
+    public void checkItemInTableSeccion(SECCION SeccionItem) throws ExecutionException, InterruptedException {
+        mSeccionTable.update(SeccionItem).get();
+    }
+
+    public void checkItemInTableSubSeccion(SUBSECCION SubSeccionItem) throws ExecutionException, InterruptedException {
+        mSubSeccionTable.update(SubSeccionItem).get();
     }
 
     /**
@@ -203,7 +214,7 @@ public class ToDoActivity extends Activity {
      *
      * @param view
      *            The view that originated the call
-     */
+     *
     public void addItem(View view) {
         if (mClient == null) {
             return;
@@ -240,22 +251,22 @@ public class ToDoActivity extends Activity {
         runAsyncTask(task);
 
         mTextNewToDo.setText("");
-    }
+    }*/
 
     /**
      * Add an item to the Mobile Service Table
      *
      * @param item
      *            The item to Add
-     */
+     *
     public ToDoItem addItemInTable(ToDoItem item) throws ExecutionException, InterruptedException {
         ToDoItem entity = mToDoTable.insert(item).get();
         return entity;
-    }
+    }*/
 
     /**
      * Refresh the list with the items in the Table
-     */
+     *
     private void refreshItemsFromTable() {
 
         // Get the items that weren't marked as completed and add them in the
@@ -290,15 +301,24 @@ public class ToDoActivity extends Activity {
         };
 
         runAsyncTask(task);
-    }
+    }*/
 
     /**
      * Refresh the list with the items in the Mobile Service Table
      */
 
-    private List<ToDoItem> refreshItemsFromMobileServiceTable() throws ExecutionException, InterruptedException {
-        return mToDoTable.where().field("complete").
-                eq(val(false)).execute().get();
+    private List<SECCION> refreshItemsSeccionTable() throws ExecutionException, InterruptedException {
+
+        return mSeccionTable.select().execute().get();
+        /*return mSeccionTable.where().field("complete").
+                eq(val(false)).execute().get();*/
+    }
+
+    private List<SUBSECCION> refreshItemsSubSeccionTable() throws ExecutionException, InterruptedException {
+
+        return mSubSeccionTable.select().execute().get();
+        /*return mSeccionTable.where().field("complete").
+                eq(val(false)).execute().get();*/
     }
 
     //Offline Sync
@@ -443,6 +463,8 @@ public class ToDoActivity extends Activity {
         }
     }
 
+
+
     private class ProgressFilter implements ServiceFilter {
 
         @Override
@@ -484,4 +506,5 @@ public class ToDoActivity extends Activity {
             return resultFuture;
         }
     }
+
 }
