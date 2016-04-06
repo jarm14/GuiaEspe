@@ -5,14 +5,17 @@ package com.example.espeguiada;
  */
 public class SECCION {
 
-    @com.google.gson.annotations.SerializedName("SEC_ID")
-    private int SEC_ID;
+    @com.google.gson.annotations.SerializedName("id")
+    private int id;
 
     @com.google.gson.annotations.SerializedName("SEC_NOMBRE")
     private String SEC_NOMBRE;
 
     @com.google.gson.annotations.SerializedName("SEC_DESCRIPCION")
     private String SEC_DESCRIPCION;
+
+    @com.google.gson.annotations.SerializedName("deleted")
+    private boolean deleted;
 
     public SECCION(){}
 
@@ -31,17 +34,17 @@ public class SECCION {
      */
 
     public SECCION(int id, String nombre, String descripcion) {
-        this.SEC_ID=id;
+        this.id=id;
         this.SEC_NOMBRE=nombre;
         this.SEC_DESCRIPCION=descripcion;
     }
 
-    public int getSEC_ID() {
-        return SEC_ID;
+    public int getid() {
+        return id;
     }
 
-    public void setSEC_ID(int SEC_ID) {
-        this.SEC_ID = SEC_ID;
+    public void setid(int id) {
+        this.id = id;
     }
 
     public String getSEC_NOMBRE() {
@@ -58,5 +61,13 @@ public class SECCION {
 
     public void setSEC_DESCRIPCION(String SEC_DESCRIPCION) {
         this.SEC_DESCRIPCION = SEC_DESCRIPCION;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
