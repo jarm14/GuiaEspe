@@ -336,14 +336,14 @@ public class MainActivity extends Activity {
 
     private List<SECCION> refreshItemsSeccionTable() throws ExecutionException, InterruptedException {
 
-        return mSeccionTable.select().execute().get();
+        return mSeccionTable.where().field("deleted").eq(val(false)).execute().get();
         /*return mSeccionTable.where().field("complete").
                 eq(val(false)).execute().get();*/
     }
 
     private List<SUBSECCION> refreshItemsSubSeccionTable() throws ExecutionException, InterruptedException {
 
-        return mSubSeccionTable.select().execute().get();
+        return mSubSeccionTable.where().field("deleted").eq(val(false)).execute().get();
         /*return mSeccionTable.where().field("complete").
                 eq(val(false)).execute().get();*/
     }
