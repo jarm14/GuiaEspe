@@ -83,12 +83,12 @@ public class MainActivity extends Activity {
      */
     private ToDoItemAdapter mAdapter;
 
-    private SECCION_adapter SeccionAdapter;
+    private SECCION_adapter seccionAdapter;
 
     /**
      * EditText containing the "New To Do" text
      */
-    private EditText mTextNewToDo;
+    //private EditText mTextNewToDo;
 
     /**
      * Progress spinner to use for table operations
@@ -152,7 +152,7 @@ public class MainActivity extends Activity {
         }
 
         exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
-        //SeparateLists();
+        SeparateLists();
         prepareListData();
         listAdapter=new SECCION_adapter(sections, subSections, this);
         exp_sections.setAdapter(listAdapter);
@@ -385,7 +385,7 @@ public class MainActivity extends Activity {
         sections = new ArrayList<String>();
         subSections = new HashMap<String, List<String>>();
 
-        /*try {
+        try {
             List<SECCION> itemsSeccion=refreshItemsSeccionTable();
             for(SECCION items:itemsSeccion){
                 sections.add(items.getSEC_NOMBRE());
@@ -394,23 +394,23 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        sections.add("Rectorado");
+        /*sections.add("Rectorado");
         sections.add("Vicerectorado Administrativo");
 
         rectorado.add("Honorable consejo universitario");
         rectorado.add("Secretaría general");
         viceAdm.add("Unidad de Talento humano");
-        viceAdm.add("Unidad Financiera");
+        viceAdm.add("Unidad Financiera");*/
 
         subSections.put(sections.get(0),rectorado);
         subSections.put(sections.get(1),viceAdm);
-        //subSections.put(sections.get(2),viceDoc);
-        //subSections.put(sections.get(3),departamentos);
-        //subSections.put(sections.get(4),viceInv);
-        //subSections.put(sections.get(5),viceAcad);
-        //subSections.put(sections.get(6),otros);
+        subSections.put(sections.get(2),viceDoc);
+        subSections.put(sections.get(3),departamentos);
+        subSections.put(sections.get(4),viceInv);
+        subSections.put(sections.get(5),viceAcad);
+        subSections.put(sections.get(6),otros);
 
 
 
