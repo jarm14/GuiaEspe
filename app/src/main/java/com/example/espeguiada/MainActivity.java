@@ -348,10 +348,10 @@ public class MainActivity extends Activity {
                 eq(val(false)).execute().get();*/
     }
 
-    private void SeparateLists()
-    {
+    private void SeparateLists() {
 
-        new AsyncTask<Void,Void,Void>() {
+
+        AsyncTask<Void,Void,Void> task = new AsyncTask<Void,Void,Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
