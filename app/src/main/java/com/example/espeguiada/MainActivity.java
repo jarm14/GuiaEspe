@@ -27,6 +27,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.http.NextServiceFilterCallback;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
@@ -144,18 +145,17 @@ public class MainActivity extends Activity {
 
             // Load the items from the Mobile Service
             //refreshItemsFromTable();
+            exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
+            SeparateLists();
+            prepareListData();
+            listAdapter=new SECCION_adapter(sections, subSections, this);
+            exp_sections.setAdapter(listAdapter);
 
         } catch (MalformedURLException e) {
             createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
         } catch (Exception e) {
             createAndShowDialog(e, "Error");
         }
-
-        exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
-        SeparateLists();
-        prepareListData();
-        listAdapter=new SECCION_adapter(sections, subSections, this);
-        exp_sections.setAdapter(listAdapter);
     }
 
     /**
@@ -336,49 +336,62 @@ public class MainActivity extends Activity {
 
     private List<SECCION> refreshItemsSeccionTable() throws ExecutionException, InterruptedException {
 
-        return mSeccionTable.where().field("deleted").eq(val(false)).execute().get();
+        return mSeccionTable.select().execute().get();
         /*return mSeccionTable.where().field("complete").
                 eq(val(false)).execute().get();*/
     }
 
     private List<SUBSECCION> refreshItemsSubSeccionTable() throws ExecutionException, InterruptedException {
 
-        return mSubSeccionTable.where().field("deleted").eq(val(false)).execute().get();
-        /*return mSeccionTable.where().field("complete").
+        return mSubSeccionTable.select().execute().get();
+        /*return mToDoTable.where().field("complete").
                 eq(val(false)).execute().get();*/
     }
 
-    private void SeparateLists()
-    {
+    private void SeparateLists() {
 
-        try {
-           final List<SUBSECCION> itemsSubSeccion = refreshItemsSubSeccionTable();
 
-            for(SUBSECCION items: itemsSubSeccion)
-            {
-                switch (items.getSEC_ID())
+        AsyncTask<Void,Void,Void> task = new AsyncTask<Void,Void,Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                try
+
                 {
-                    case 1:
-                        rectorado.add(items.getSUB_NOMBRE().toString());
-                    case 2:
-                        viceAdm.add(items.getSUB_NOMBRE().toString());
-                    case 3:
-                        viceDoc.add(items.getSUB_NOMBRE().toString());
-                    case 4:
-                        departamentos.add(items.getSUB_NOMBRE().toString());
-                    case 5:
-                        viceInv.add(items.getSUB_NOMBRE().toString());
-                    case 6:
-                        viceAcad.add(items.getSUB_NOMBRE().toString());
-                    case 7:
-                        otros.add(items.getSUB_NOMBRE().toString());
+                    final List<SUBSECCION> itemsSubSeccion = refreshItemsSubSeccionTable();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            for (SUBSECCION items : itemsSubSeccion) {
+                                switch (items.getSEC_ID()) {
+                                    case 1:
+                                        rectorado.add(items.getSUB_NOMBRE().toString());
+                                    case 2:
+                                        viceAdm.add(items.getSUB_NOMBRE().toString());
+                                    case 3:
+                                        viceDoc.add(items.getSUB_NOMBRE().toString());
+                                    case 4:
+                                        departamentos.add(items.getSUB_NOMBRE().toString());
+                                    case 5:
+                                        viceInv.add(items.getSUB_NOMBRE().toString());
+                                    case 6:
+                                        viceAcad.add(items.getSUB_NOMBRE().toString());
+                                    case 7:
+                                        otros.add(items.getSUB_NOMBRE().toString());
+                                }
+                            }
+                        }
+                    });
+
+                } catch (Exception e){
+                    createAndShowDialog(e,"ERROR");
                 }
+                return null;
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        }.execute();
     }
 
     private void prepareListData() {

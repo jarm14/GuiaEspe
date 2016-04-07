@@ -4,19 +4,25 @@ package com.example.espeguiada;
  * Created by adrian on 28/03/16.
  */
 public class EDIFICIO {
-    private int EDI_ID;
+
+    @com.google.gson.annotations.SerializedName("id")
+    private int id;
+    @com.google.gson.annotations.SerializedName("EDI_NOMBRE")
     private String EDI_NOMBRE;
+    @com.google.gson.annotations.SerializedName("EDI_UBICACION")
     private String EDI_UBICACION;
+    @com.google.gson.annotations.SerializedName("deleted")
+    private boolean deleted;
 
 
     public EDIFICIO(){}
 
-    public int getEDI_ID() {
-        return EDI_ID;
+    public int getid() {
+        return id;
     }
 
-    public void setEDI_ID(int EDI_ID) {
-        this.EDI_ID = EDI_ID;
+    public void setid(int id) {
+        this.id = id;
     }
 
     public String getEDI_NOMBRE() {
@@ -33,5 +39,13 @@ public class EDIFICIO {
 
     public void setEDI_UBICACION(String EDI_UBICACION) {
         this.EDI_UBICACION = EDI_UBICACION;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -7,23 +7,32 @@ import android.graphics.Bitmap;
  */
 public class SUBSECCION {
 
-    private int SUB_ID;
+    @com.google.gson.annotations.SerializedName("id")
+    private int id;
+    @com.google.gson.annotations.SerializedName("SEC_ID")
     private int SEC_ID;
+    @com.google.gson.annotations.SerializedName("EDI_ID")
     private int EDI_ID;
+    @com.google.gson.annotations.SerializedName("SUB_NOMBRE")
     private String SUB_NOMBRE;
+    @com.google.gson.annotations.SerializedName("SUB_DESCRIPCION")
     private String SUB_DESCRIPCION;
+    @com.google.gson.annotations.SerializedName("SUB_UBICACION")
     private String SUB_UBICACION;
+    @com.google.gson.annotations.SerializedName("SUB_LOGO")
     private Bitmap SUB_LOGO;
+    @com.google.gson.annotations.SerializedName("deleted")
+    private boolean deleted;
 
     public SUBSECCION(){}
 
 
-    public int getSUB_ID() {
-        return SUB_ID;
+    public int getid() {
+        return id;
     }
 
-    public void setSUB_ID(int SUB_ID) {
-        this.SUB_ID = SUB_ID;
+    public void setid(int id) {
+        this.id = id;
     }
 
     public int getSEC_ID() {
@@ -72,5 +81,13 @@ public class SUBSECCION {
 
     public void setSUB_LOGO(Bitmap SUB_LOGO) {
         this.SUB_LOGO = SUB_LOGO;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
