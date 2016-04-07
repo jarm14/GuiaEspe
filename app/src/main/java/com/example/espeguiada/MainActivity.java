@@ -134,7 +134,7 @@ public class MainActivity extends Activity {
             //mToDoTable = mClient.getSyncTable("ToDoItem", ToDoItem.class);
 
             //Init local storage
-            initLocalStore().get();
+            //initLocalStore().get();
 
             //mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
 
@@ -391,7 +391,8 @@ public class MainActivity extends Activity {
                 }
                 return null;
             }
-        }.execute();
+        };
+        runAsyncTask(task);
     }
 
     private void prepareListData() {
