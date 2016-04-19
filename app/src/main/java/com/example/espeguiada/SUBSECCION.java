@@ -8,11 +8,11 @@ import android.graphics.Bitmap;
 public class SUBSECCION {
 
     @com.google.gson.annotations.SerializedName("id")
-    private int id;
+    private String id;
     @com.google.gson.annotations.SerializedName("SEC_ID")
-    private int SEC_ID;
+    private String SEC_ID;
     @com.google.gson.annotations.SerializedName("EDI_ID")
-    private int EDI_ID;
+    private String EDI_ID;
     @com.google.gson.annotations.SerializedName("SUB_NOMBRE")
     private String SUB_NOMBRE;
     @com.google.gson.annotations.SerializedName("SUB_DESCRIPCION")
@@ -20,34 +20,34 @@ public class SUBSECCION {
     @com.google.gson.annotations.SerializedName("SUB_UBICACION")
     private String SUB_UBICACION;
     @com.google.gson.annotations.SerializedName("SUB_LOGO")
-    private Bitmap SUB_LOGO;
+    private String SUB_LOGO;
     @com.google.gson.annotations.SerializedName("deleted")
     private boolean deleted;
 
     public SUBSECCION(){}
 
 
-    public int getid() {
+    public String getid() {
         return id;
     }
 
-    public void setid(int id) {
+    public void setid(String id) {
         this.id = id;
     }
 
-    public int getSEC_ID() {
+    public String getSEC_ID() {
         return SEC_ID;
     }
 
-    public void setSEC_ID(int SEC_ID) {
+    public void setSEC_ID(String SEC_ID) {
         this.SEC_ID = SEC_ID;
     }
 
-    public int getEDI_ID() {
+    public String getEDI_ID() {
         return EDI_ID;
     }
 
-    public void setEDI_ID(int EDI_ID) {
+    public void setEDI_ID(String EDI_ID) {
         this.EDI_ID = EDI_ID;
     }
 
@@ -75,11 +75,11 @@ public class SUBSECCION {
         this.SUB_UBICACION = SUB_UBICACION;
     }
 
-    public Bitmap getSUB_LOGO() {
+    public String getSUB_LOGO() {
         return SUB_LOGO;
     }
 
-    public void setSUB_LOGO(Bitmap SUB_LOGO) {
+    public void setSUB_LOGO(String SUB_LOGO) {
         this.SUB_LOGO = SUB_LOGO;
     }
 

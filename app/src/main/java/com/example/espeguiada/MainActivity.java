@@ -1,6 +1,11 @@
 package com.example.espeguiada;
 
 import java.net.MalformedURLException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +18,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +51,8 @@ import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSy
 import android.content.Context;
 
 
+import javax.sql.ConnectionEvent;
+
 import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperations.*;
 
 
@@ -62,34 +71,14 @@ public class MainActivity extends Activity {
     List<String>departamentos;
     List<String>otros;
 
-    /**
-     * Mobile Service Client reference
-     */
-    private MobileServiceClient mClient;
-
-    /**
-     * Mobile Service Table used to access data
-     */
-    private MobileServiceTable<SECCION> mSeccionTable;
-    private MobileServiceTable<SUBSECCION> mSubSeccionTable;
-
-    //Offline Sync
-    /**
-     * Mobile Service Table used to acce/home/adrianss and Sync data
-     */
-    //private MobileServiceSyncTable<ToDoItem> mToDoTable;
+    /*Variable para la coneccion sql*/
+    Connection coneccion;
 
     /**
      * Adapter to sync the items list with the view
      */
-    private ToDoItemAdapter mAdapter;
 
     private SECCION_adapter seccionAdapter;
-
-    /**
-     * EditText containing the "New To Do" text
-     */
-    //private EditText mTextNewToDo;
 
     /**
      * Progress spinner to use for table operations
@@ -99,6 +88,30 @@ public class MainActivity extends Activity {
     /**
      * Initializes the activity
      */
+
+
+    private Connection CONN ()
+    {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection conn = null;
+
+        String azure = "jdbc:jtds:sqlserver://lugaresespe.database.windows.net:1433;database=LugaresEspe;user=GuiaEspe@lugaresespe;password=Admin112358.;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+        String joel ="jdbc:jtds:sqlserver://10.101.22.130:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=30;";
+
+        try {
+
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            conn = DriverManager.getConnection(joel);
+
+        } catch (SQLException se) {
+            Log.e("ERROR", se.getMessage());
+        } catch (Exception e) {
+            Log.e("ERRO", e.getMessage());
+        }
+
+        return conn;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,41 +131,16 @@ public class MainActivity extends Activity {
         otros = new ArrayList<String>();
 
         try {
-            // Create the Mobile Service Client instance, using the provided
 
-            // Mobile Service URL and key
-            mClient = new MobileServiceClient(
-                    "https://espeguiada.azurewebsites.net",
-                    this).withFilter(new ProgressFilter());
+            coneccion = CONN();
 
-            // Get the Mobile Service Table instance to use
-
-            mSeccionTable = mClient.getTable(SECCION.class);
-            mSubSeccionTable = mClient.getTable(SUBSECCION.class);
-
-            // Offline Sync
-            //mToDoTable = mClient.getSyncTable("ToDoItem", ToDoItem.class);
-
-            //Init local storage
-            //initLocalStore().get();
-
-            //mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
-
-            // Create an adapter to bind the items with the view
-            //mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);
-            //ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
-            //listViewToDo.setAdapter(mAdapter);
-
-            // Load the items from the Mobile Service
-            //refreshItemsFromTable();
             exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
             SeparateLists();
             prepareListData();
             listAdapter=new SECCION_adapter(sections, subSections, this);
             exp_sections.setAdapter(listAdapter);
+            coneccion.close();
 
-        } catch (MalformedURLException e) {
-            createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
         } catch (Exception e) {
             createAndShowDialog(e, "Error");
         }
@@ -167,256 +155,74 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    /**
-     * Select an option from the menu
-     */
-    /*@Override*/
-    /*public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_refresh) {
-            refreshItemsFromTable();
-        }
-
-        return true;
-    }*/
-
-    /**
-     * Mark an item as completed
-     *
-     * @param item
-     *            The item to mark
-     *
-    public void checkItem(final ToDoItem item) {
-        if (mClient == null) {
-            return;
-        }
-
-        // Set the item as completed and update it in the table
-        item.setComplete(true);
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-
-                    checkItemInTable(item);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (item.isComplete()) {
-                                mAdapter.remove(item);
-                            }
-                        }
-                    });
-                } catch (final Exception e) {
-                    createAndShowDialogFromTask(e, "Error");
-                }
-
-                return null;
-            }
-        };
-
-        runAsyncTask(task);
-
-    }*/
-
-    /**
-     * Mark an item as completed in the Mobile Service Table
-     *
-     * @param SeccionItem
-     *            The item to mark
-     */
-    public void checkItemInTableSeccion(SECCION SeccionItem) throws ExecutionException, InterruptedException {
-        mSeccionTable.update(SeccionItem).get();
-    }
-
-    public void checkItemInTableSubSeccion(SUBSECCION SubSeccionItem) throws ExecutionException, InterruptedException {
-        mSubSeccionTable.update(SubSeccionItem).get();
-    }
-
-    /**
-     * Add a new item
-     *
-     * @param view
-     *            The view that originated the call
-     *
-    public void addItem(View view) {
-        if (mClient == null) {
-            return;
-        }
-
-        // Create a new item
-        final ToDoItem item = new ToDoItem();
-
-        item.setText(mTextNewToDo.getText().toString());
-        item.setComplete(false);subSections.put(sections.get(7),viceAcad);
-        subSections.put(sections.get(8),viceAcad);
-
-        subSections.put(sections.get(11),viceAcad);
-
-        // Insert the new item
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    final ToDoItem entity = addItemInTable(item);
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!entity.isComplete()){
-                                mAdapter.add(entity);
-                            }
-                        }
-                    });
-                } catch (final Exception e) {
-                    createAndShowDialogFromTask(e, "Error");
-                }
-                return null;
-            }
-        };
-
-        runAsyncTask(task);
-
-        mTextNewToDo.setText("");
-    }*/
-
-    /**
-     * Add an item to the Mobile Service Table
-     *
-     * @param item
-     *            The item to Add
-     *
-    public ToDoItem addItemInTable(ToDoItem item) throws ExecutionException, InterruptedException {
-        ToDoItem entity = mToDoTable.insert(item).get();
-        return entity;
-    }*/
-
-    /**
-     * Refresh the list with the items in the Table
-     *
-    private void refreshItemsFromTable() {
-
-        // Get the items that weren't marked as completed and add them in the
-        // adapter
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                try {
-                    final List<ToDoItem> results = refreshItemsFromMobileServiceTable();
-
-                    //Offline Sync
-                    //final List<ToDoItem> results = refreshItemsFromMobileServiceTableSyncTable();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.clear();
-
-                            for (ToDoItem item : results) {
-                                mAdapter.add(item);
-                            }
-                        }
-                    });
-                } catch (final Exception e){
-                    createAndShowDialogFromTask(e, "Error");
-                }
-
-                return null;
-            }
-        };
-
-        runAsyncTask(task);
-    }*/
-
-    /**
-     * Refresh the list with the items in the Mobile Service Table
-     */
-
-    private List<SECCION> refreshItemsSeccionTable() throws ExecutionException, InterruptedException {
-
-        return mSeccionTable.select().execute().get();
-        /*return mSeccionTable.where().field("complete").
-                eq(val(false)).execute().get();*/
-    }
-
-    private List<SUBSECCION> refreshItemsSubSeccionTable() throws ExecutionException, InterruptedException {
-
-        return mSubSeccionTable.select().execute().get();
-        /*return mToDoTable.where().field("complete").
-                eq(val(false)).execute().get();*/
-    }
-
     private void SeparateLists() {
 
+        ResultSet itemsSubseccion;
+        String sql = "use LugaresEspe; select * from subseccion";
 
-        AsyncTask<Void,Void,Void> task = new AsyncTask<Void,Void,Void>() {
+        try {
 
-            @Override
-            protected Void doInBackground(Void... params) {
+            Statement statement = coneccion.createStatement();
+            itemsSubseccion = statement.executeQuery(sql);
+            // Ajuste nuestro SimpleAdapter
+            int id;
+            id = 0;
 
-                try
+            while (itemsSubseccion.next()) {
+                // navegar por nuestro ResultSet en cada registro, siempre y cuando exista un prox.
 
-                {
-                    final List<SUBSECCION> itemsSubSeccion = refreshItemsSubSeccionTable();
+                id = Integer.parseInt(itemsSubseccion.getString("SEC_ID"));
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            for (SUBSECCION items : itemsSubSeccion) {
-                                switch (items.getSEC_ID()) {
-                                    case 1:
-                                        rectorado.add(items.getSUB_NOMBRE().toString());
-                                    case 2:
-                                        viceAdm.add(items.getSUB_NOMBRE().toString());
-                                    case 3:
-                                        viceDoc.add(items.getSUB_NOMBRE().toString());
-                                    case 4:
-                                        departamentos.add(items.getSUB_NOMBRE().toString());
-                                    case 5:
-                                        viceInv.add(items.getSUB_NOMBRE().toString());
-                                    case 6:
-                                        viceAcad.add(items.getSUB_NOMBRE().toString());
-                                    case 7:
-                                        otros.add(items.getSUB_NOMBRE().toString());
-                                }
-                            }
-                        }
-                    });
-
-                } catch (Exception e){
-                    createAndShowDialog(e,"ERROR");
+                switch (id) {
+                    case 1:
+                        rectorado.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
+                    case 2:
+                        viceAdm.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
+                    case 3:
+                        viceDoc.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
+                    case 4:
+                        departamentos.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
+                    case 5:
+                        viceInv.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
+                    case 6:
+                        viceAcad.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
+                    case 7:
+                        otros.add(itemsSubseccion.getString("SUB_NOMBRE"));
+                        break;
                 }
-                return null;
             }
-        };
-        runAsyncTask(task);
+
+        } catch (SQLException se) {
+            System.out.println("Error: " + se.toString());
+        }
     }
 
     private void prepareListData() {
         sections = new ArrayList<String>();
         subSections = new HashMap<String, List<String>>();
+        ResultSet itemsSeccion;
+        String sql = "use LugaresEspe; select * from seccion";
 
-        try {
-            List<SECCION> itemsSeccion=refreshItemsSeccionTable();
-            for(SECCION items:itemsSeccion){
-                sections.add(items.getSEC_NOMBRE());
+        try
+        {
+            Statement statement = coneccion.createStatement();
+            itemsSeccion = statement.executeQuery(sql);
+            int id=0;
+
+            while (itemsSeccion.next())
+            {
+                sections.add(itemsSeccion.getString("SEC_NOMBRE"));
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        /*sections.add("Rectorado");
-        sections.add("Vicerectorado Administrativo");
-
-        rectorado.add("Honorable consejo universitario");
-        rectorado.add("Secretaría general");
-        viceAdm.add("Unidad de Talento humano");
-        viceAdm.add("Unidad Financiera");*/
 
         subSections.put(sections.get(0),rectorado);
         subSections.put(sections.get(1),viceAdm);
@@ -426,89 +232,7 @@ public class MainActivity extends Activity {
         subSections.put(sections.get(5),viceAcad);
         subSections.put(sections.get(6),otros);
 
-
-
-
     }
-
-    //Offline Sync
-    /**
-     * Refresh the list with the items in the Mobile Service Sync Table
-     */
-    /*private List<ToDoItem> refreshItemsFromMobileServiceTableSyncTable() throws ExecutionException, InterruptedException {
-        //sync the data
-        sync().get();
-        Query query = QueryOperations.field("complete").
-                eq(val(false));
-        return mToDoTable.read(query).get();
-    }*/
-
-    /**
-     * Initialize local storage
-     * @return
-     * @throws MobileServiceLocalStoreException
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    private AsyncTask<Void, Void, Void> initLocalStore() throws MobileServiceLocalStoreException, ExecutionException, InterruptedException {
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-
-                    MobileServiceSyncContext syncContext = mClient.getSyncContext();
-
-                    if (syncContext.isInitialized())
-                        return null;
-
-                    SQLiteLocalStore localStore = new SQLiteLocalStore(mClient.getContext(), "OfflineStore", null, 1);
-
-                    Map<String, ColumnDataType> tableDefinition = new HashMap<String, ColumnDataType>();
-                    tableDefinition.put("id", ColumnDataType.String);
-                    tableDefinition.put("text", ColumnDataType.String);
-                    tableDefinition.put("complete", ColumnDataType.Boolean);
-
-                    localStore.defineTable("ToDoItem", tableDefinition);
-
-                    SimpleSyncHandler handler = new SimpleSyncHandler();
-
-                    syncContext.initialize(localStore, handler).get();
-
-                } catch (final Exception e) {
-                    createAndShowDialogFromTask(e, "Error");
-                }
-
-                return null;
-            }
-        };
-
-        return runAsyncTask(task);
-    }
-
-    //Offline Sync
-    /**
-     * Sync the current context and the Mobile Service Sync Table
-     * @return
-     */
-    /*
-    private AsyncTask<Void, Void, Void> sync() {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    MobileServiceSyncContext syncContext = mClient.getSyncContext();
-                    syncContext.push().get();
-                    mToDoTable.pull(null).get();
-                } catch (final Exception e) {
-                    createAndShowDialogFromTask(e, "Error");
-                }
-                return null;
-            }
-        };
-        return runAsyncTask(task);
-    }
-    */
 
     /**
      * Creates a dialog and shows it

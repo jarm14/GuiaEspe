@@ -6,7 +6,7 @@ package com.example.espeguiada;
 public class EDIFICIO {
 
     @com.google.gson.annotations.SerializedName("id")
-    private int id;
+    private String id;
     @com.google.gson.annotations.SerializedName("EDI_NOMBRE")
     private String EDI_NOMBRE;
     @com.google.gson.annotations.SerializedName("EDI_UBICACION")
@@ -17,11 +17,11 @@ public class EDIFICIO {
 
     public EDIFICIO(){}
 
-    public int getid() {
+    public String getid() {
         return id;
     }
 
-    public void setid(int id) {
+    public void setid(String id) {
         this.id = id;
     }
 
