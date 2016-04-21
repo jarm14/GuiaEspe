@@ -8,11 +8,11 @@ import android.graphics.Bitmap;
 public class SUBSECCION {
 
     @com.google.gson.annotations.SerializedName("id")
-    private int id;
+    private String id;
     @com.google.gson.annotations.SerializedName("SEC_ID")
-    private int SEC_ID;
+    private String SEC_ID;
     @com.google.gson.annotations.SerializedName("EDI_ID")
-    private int EDI_ID;
+    private String EDI_ID;
     @com.google.gson.annotations.SerializedName("SUB_NOMBRE")
     private String SUB_NOMBRE;
     @com.google.gson.annotations.SerializedName("SUB_DESCRIPCION")
@@ -24,32 +24,24 @@ public class SUBSECCION {
     @com.google.gson.annotations.SerializedName("deleted")
     private boolean deleted;
 
+    private int MAP_RESOURCE;
+
     public SUBSECCION(){}
 
+    public SUBSECCION(String id, String SEC_ID, String EDI_ID, String SUB_NOMBRE, String SUB_DESCRIPCION, String SUB_UBICACION, int MAP_RESOURCE, boolean deleted) {
+        this.setId(id);
+        this.setSEC_ID(SEC_ID);
+        this.setEDI_ID(EDI_ID);
+        this.SUB_NOMBRE = SUB_NOMBRE;
+        this.SUB_DESCRIPCION = SUB_DESCRIPCION;
+        this.SUB_UBICACION = SUB_UBICACION;
+        this.setMAP_RESOURCE(MAP_RESOURCE);
 
-    public int getid() {
-        return id;
+        this.SUB_LOGO = SUB_LOGO;
+        this.deleted = deleted;
     }
 
-    public void setid(int id) {
-        this.id = id;
-    }
 
-    public int getSEC_ID() {
-        return SEC_ID;
-    }
-
-    public void setSEC_ID(int SEC_ID) {
-        this.SEC_ID = SEC_ID;
-    }
-
-    public int getEDI_ID() {
-        return EDI_ID;
-    }
-
-    public void setEDI_ID(int EDI_ID) {
-        this.EDI_ID = EDI_ID;
-    }
 
     public String getSUB_NOMBRE() {
         return SUB_NOMBRE;
@@ -89,5 +81,37 @@ public class SUBSECCION {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public int getMAP_RESOURCE() {
+        return MAP_RESOURCE;
+    }
+
+    public void setMAP_RESOURCE(int MAP_RESOURCE) {
+        this.MAP_RESOURCE = MAP_RESOURCE;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSEC_ID() {
+        return SEC_ID;
+    }
+
+    public void setSEC_ID(String SEC_ID) {
+        this.SEC_ID = SEC_ID;
+    }
+
+    public String getEDI_ID() {
+        return EDI_ID;
+    }
+
+    public void setEDI_ID(String EDI_ID) {
+        this.EDI_ID = EDI_ID;
     }
 }

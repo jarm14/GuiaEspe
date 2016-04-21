@@ -6,5 +6,9 @@
     <string name="app_title">Espe Guiada</string>
     <string name="menu_refresh">Refresh</string>
     <string name="checkbox_text">Item Text</string>
-    
+    <string name="title_informacion">Información</string>
+    <string name="title_ubicacion">Ubicación</string>
+    <string name="info_subseccion">%s</string>
+    <string name="title_activity_activity_info">ActivityInfo</string>
+
 </resources>

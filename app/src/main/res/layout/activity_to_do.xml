@@ -4,24 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="100"
     >
 
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#088A08"
-        android:padding="6dip"
-        android:orientation="vertical">
+        android:layout_height="119dp"
+        android:background="#088A08">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="2"
+            android:id="@+id/imageView1" />
 
         <ImageView
             android:id="@+id/imageViewLogo"
-            android:layout_width="match_parent"
+
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:background="@drawable/logoespe" />
+            android:layout_weight="96"
+            android:background="@drawable/logoespe"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="2"
+            android:id="@+id/imageView2"
+            android:layout_gravity="right" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <!-- <LinearLayout
         android:layout_width="match_parent" 
         android:layout_height="wrap_content" 
         android:background="#088A08"
@@ -40,9 +57,10 @@
              android:text="@string/app_title"
              android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="40sp"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF"
+            android:typeface="serif"/>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         xmlns:tools="http://schemas.android.com/tools"
