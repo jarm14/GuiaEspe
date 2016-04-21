@@ -6,7 +6,7 @@ package com.example.espeguiada;
 public class SECCION {
 
     @com.google.gson.annotations.SerializedName("id")
-    private int id;
+    private String id;
 
     @com.google.gson.annotations.SerializedName("SEC_NOMBRE")
     private String SEC_NOMBRE;
@@ -33,17 +33,17 @@ public class SECCION {
      *            The item id
      */
 
-    public SECCION(int id, String nombre, String descripcion) {
+    public SECCION(String id, String nombre, String descripcion) {
         this.id=id;
         this.SEC_NOMBRE=nombre;
         this.SEC_DESCRIPCION=descripcion;
     }
 
-    public int getid() {
+    public String getid() {
         return id;
     }
 
-    public void setid(int id) {
+    public void setid(String id) {
         this.id = id;
     }
 
