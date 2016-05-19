@@ -11,12 +11,12 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="119dp"
-        android:background="#088A08">
+        android:background="#74DF00">
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="2"
+            android:layout_weight="5"
             android:id="@+id/imageView1" />
 
         <ImageView
@@ -24,15 +24,17 @@
 
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="96"
+            android:layout_weight="90"
             android:background="@drawable/logoespe"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp" />
+            android:layout_marginRight="25dp"
+            />
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="2"
+            android:layout_weight="5"
             android:id="@+id/imageView2"
             android:layout_gravity="right" />
 
@@ -75,7 +77,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/expandableListView"
             android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-            android:divider="#088A08"
+            android:divider="#087108"
             android:dividerHeight="2dp"/>
 
     </LinearLayout>

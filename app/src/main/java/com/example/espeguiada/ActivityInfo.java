@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,11 +29,19 @@ public class ActivityInfo extends Activity {
 
         Intent intent = getIntent();
         info=intent.getStringArrayExtra(MainActivity.ACT_INFO);
-        mapResource=intent.getIntExtra("Map",1);
+        //mapResource=intent.getIntExtra("Map",1);
 
         txtInfo.setText(info[1]);
-        imgMap.setImageResource(mapResource);
-
+        txtInfo.setPadding(40,5,40,5);
+        txtInfo.setGravity(Gravity.CENTER_HORIZONTAL);
+        txtInfo.setTextSize(16);
+        //mapResource=0x7f020002;
+        //imgMap.setImageResource(mapResource);
+        //String name="logo_bio";
+        String name=info[2];
+        String resource="drawable";
+        int res_imagen = getResources().getIdentifier(name, resource,getPackageName());
+        imgMap.setImageResource(res_imagen);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
 

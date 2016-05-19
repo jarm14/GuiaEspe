@@ -72,7 +72,8 @@ public class MainActivity extends Activity {
     List<String>otros;
 
     /*Variable para la coneccion sql*/
-    Connection coneccion;
+    Connection conexion;
+
 
     /**
      * Adapter to sync the items list with the view
@@ -86,19 +87,19 @@ public class MainActivity extends Activity {
     private ProgressBar mProgressBar;
 
 
-    private Connection CONN ()
+    /*private Connection CONN ()
     {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         Connection conn = null;
 
-        String azure = "jdbc:jtds:sqlserver://lugaresespe.database.windows.net:1433;database=LugaresEspe;user=GuiaEspe@lugaresespe;password=Admin112358.;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-        String joel ="jdbc:jtds:sqlserver://10.101.24.36:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=30;";
+        //String azure = "jdbc:jtds:sqlserver://lugaresespe.database.windows.net:1433;database=LugaresEspe;user=GuiaEspe@lugaresespe;password=Admin112358.;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+        String conect ="jdbc:jtds:sqlserver://10.9.9.175:1433;database=LugaresEspe;user=usguia;password=Admin112358.;loginTimeout=30;";
 
         try {
 
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            conn = DriverManager.getConnection(joel);
+            conn = DriverManager.getConnection(conect);
 
         } catch (SQLException se) {
             Log.e("ERROR", se.getMessage());
@@ -107,7 +108,7 @@ public class MainActivity extends Activity {
         }
 
         return conn;
-    }
+    }*/
 
     /**
      * Initializes the activity
@@ -133,7 +134,7 @@ public class MainActivity extends Activity {
 
         try {
 
-            coneccion = CONN();
+            conexion = ConexionSQL.ConnectionHelper();
 
             exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
             SeparateLists();
@@ -157,14 +158,18 @@ public class MainActivity extends Activity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 SUBSECCION subseccion;
 
-                switch(subSections.get(sections.get(groupPosition)).get(childPosition)){
+                String subsecName = subSections.get(sections.get(groupPosition)).get(childPosition);
+
+                subseccion=getSubseccionItem(subsecName);
+
+                /*switch(subsecOpt){
                     case "Secretaria General":
                         subseccion=new SUBSECCION("1","1","1","Secretaría general", "La Secretaría general se encarga de aldsfkjhalsknclkajsdhflkashdfkljadshlkfhasldkfhasljkfdlajfdhladksjfhlaksjfhladskjfhlakfhasdlfjsk" +
                                 "lfhlkaHDLKSDlkjHADLKJSDJkhlhlJDHLJSAHDLASJFHLDJAHLFSJDHGLKJDGLJSHLlaksjdfhlajfh lajshflkaj flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas", R.drawable.map_secretaria_general ,false );
                         break;
                     case "Unidad de Auditoria Interna":
                         //subseccion=new SUBSECCION("2","1","1","Honorable consejo universitario", "El Honorable consejo universitario se encarga de  flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas",null, 0, false );
-                        subseccion=getSubseccionItem(subSections.get(sections.get(groupPosition)).get(childPosition));
+                        subseccion=getSubseccionItem(subsecOpt);
                         break;
                     case "Unidad de Talento humano":
                         subseccion=new SUBSECCION("1","2","1","Unidad de Talento humano", "La Unidad de Talento humano se encarga de  flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas",0 ,false );
@@ -176,7 +181,7 @@ public class MainActivity extends Activity {
                         subseccion=new SUBSECCION("1","1","1","Vacio", "vacio ", "ubicacion_coordenadas",0, false );
                         break;
 
-                }
+                }*/
 
                 nextActivity(v,subseccion);
                 return false;
@@ -199,10 +204,10 @@ public class MainActivity extends Activity {
         SUBSECCION subseccion;
         String sql="use LugaresEspe; select * from subseccion where SUB_NOMBRE='"+name+"'";
         try{
-            Statement statement = coneccion.createStatement();
+            Statement statement = conexion.createStatement();
             itemSubseccion = statement.executeQuery(sql);
                 itemSubseccion.next();
-                subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"), Integer.parseInt(itemSubseccion.getString("MAP_RESOURCE")), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
+                subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"), itemSubseccion.getString("SUB_LOGO"), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
                 return subseccion;
 
 
@@ -223,7 +228,7 @@ public class MainActivity extends Activity {
 
         try {
 
-            Statement statement = coneccion.createStatement();
+            Statement statement = conexion.createStatement();
             itemsSubseccion = statement.executeQuery(sql);
             // Ajuste nuestro SimpleAdapter
             int id;
@@ -272,7 +277,7 @@ public class MainActivity extends Activity {
 
         try
         {
-            Statement statement = coneccion.createStatement();
+            Statement statement = conexion.createStatement();
             itemsSeccion = statement.executeQuery(sql);
             int id=0;
 
@@ -398,6 +403,7 @@ public class MainActivity extends Activity {
         }
     }*/
     final static String ACT_INFO="com.example.espeguiada.ActivityInfo";
+
     public void nextActivity(View view, SUBSECCION subseccion){
 
         String[] info=new String[3];
@@ -406,12 +412,12 @@ public class MainActivity extends Activity {
 
         info[0]=subseccion.getSUB_NOMBRE().toString();
         info[1]=subseccion.getSUB_DESCRIPCION().toString();
-        //info[2]=subseccion.getMAP_RESOURCE();
+        info[2]=subseccion.getSUB_LOGO();
 
 
         Intent act=new Intent(this,ActivityInfo.class);
         act.putExtra(ACT_INFO, info);
-        act.putExtra("Map",subseccion.getMAP_RESOURCE());
+        //act.putExtra("Map",subseccion.getMAP_RESOURCE());
         startActivity(act);
     }
 

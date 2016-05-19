@@ -31,5 +31,4 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.microsoft.azure:azure-mobile-android:3.0'
     compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@jar'
-    compile 'net.sourceforge.jtds:jtds:1.3.1'
 }
