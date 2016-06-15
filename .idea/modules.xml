@@ -4,8 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GuiaEspe.iml" filepath="$PROJECT_DIR$/GuiaEspe.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/librerias/jtds-1.2.7-dist/jtds-1.2.7-dist.iml" filepath="$PROJECT_DIR$/librerias/jtds-1.2.7-dist/jtds-1.2.7-dist.iml" />
-      <module fileurl="file://$PROJECT_DIR$/librerias/librerias.iml" filepath="$PROJECT_DIR$/librerias/librerias.iml" />
     </modules>
   </component>
 </project>
