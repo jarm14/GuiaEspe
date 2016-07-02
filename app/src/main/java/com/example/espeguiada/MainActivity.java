@@ -411,7 +411,15 @@ public class MainActivity extends Activity {
 
 
         info[0]=subseccion.getSUB_NOMBRE().toString();
-        info[1]=subseccion.getSUB_DESCRIPCION().toString();
+
+        if(subseccion.getSUB_DESCRIPCION().isEmpty())
+        {
+            subseccion.setSUB_DESCRIPCION(" ");
+            info[1]=subseccion.getSUB_DESCRIPCION().toString();
+        }else
+        {
+            info[1]=subseccion.getSUB_DESCRIPCION().toString();
+        }
         info[2]=subseccion.getSUB_LOGO();
 
 
