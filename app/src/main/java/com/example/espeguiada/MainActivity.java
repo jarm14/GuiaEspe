@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
             Statement statement = conexion.createStatement();
             itemSubseccion = statement.executeQuery(sql);
             itemSubseccion.next();
-            subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"), itemSubseccion.getString("SUB_LOGO"), itemSubseccion.getString("SUB_MICROSITIO"), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
+            subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"),itemSubseccion.getString("SUB_INSTRUCCIONES"), itemSubseccion.getString("SUB_LOGO"), itemSubseccion.getString("SUB_MICROSITIO"), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
             return subseccion;
 
 
@@ -182,7 +182,7 @@ public class MainActivity extends Activity {
 
     }
 
-    private String getCoord(String edi_id){
+   /* private String getCoord(String edi_id){
         ResultSet Coord;
         String coordinates;
         String sql1="use LugaresEspe; select EDI_UBICACION from EDIFICIO where id='"+edi_id+"'";
@@ -203,7 +203,7 @@ public class MainActivity extends Activity {
 
         return null;
 
-    }
+    }*/
 
 
 
@@ -444,7 +444,7 @@ public class MainActivity extends Activity {
         info[4] = director.getDIR_MAIL().toString();
         info[5] = director.getDIR_TELEFONO().toString();
         info[6]=subseccion.getSUB_MICROSITIO().toString();
-        info[7]= this.getCoord(subseccion.getEDI_ID());
+        info[7]= subseccion.getSUB_UBICACION().toString();
 
         Intent act=new Intent(this,ActivityInfo.class);
         act.putExtra(ACT_INFO, info);
