@@ -19,22 +19,9 @@ public class ConexionSQL {
 
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            //ConnectionURL = "jdbc:jtds:sqlserver://10.9.9.175:1433;database=LugaresEspe;user=usguia;password=Admin112358.;loginTimeout=30;";
 
-
-
-            //ConnectionURL = "jdbc:jtds:sqlserver://186.69.217.61:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=30;";
-
-
-
-                ConnectionURL = "jdbc:jtds:sqlserver://10.9.9.175:1433;database=LugaresEspe;user=usguia;password=Admin112358.;loginTimeout=5;";
-
-
+                ConnectionURL = "jdbc:jtds:sqlserver://10.9.9.175:1433;database=LugaresEspe;user=usguia;password=Admin112358.;loginTimeout=1;";
                 connection = DriverManager.getConnection(ConnectionURL);
-
-
-
-
 
         } catch (SQLException se) {
             //Log.e("ERROR", se.getMessage());
@@ -48,27 +35,14 @@ public class ConexionSQL {
         if (connection == null) {
             try {
 
-                //ConnectionURL = "jdbc:jtds:sqlserver://10.9.9.175:1433;database=LugaresEspe;user=usguia;password=Admin112358.;loginTimeout=30;";
-
-
-
-                //ConnectionURL = "jdbc:jtds:sqlserver://186.69.217.61:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=30;";
-
-
-
-                ConnectionURL = "jdbc:jtds:sqlserver://186.69.217.61:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=30;";
-
+                ConnectionURL = "jdbc:jtds:sqlserver://186.69.217.61:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=5;";
                 connection = DriverManager.getConnection(ConnectionURL);
 
-
-
-
-
             } catch (SQLException se) {
-                Log.e("ERROR", se.getMessage());
+                Log.e("ERROR", "No se pudo conectar a la base de datos. Revise su conexión a internet.");
 
             }catch (Exception e) {
-                Log.e("ERROR", e.getMessage());
+                Log.e("ERROR", "No se pudo conectar.");
             }
 
         }

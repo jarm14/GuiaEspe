@@ -9,6 +9,13 @@
     <string name="title_informacion">Información</string>
     <string name="title_ubicacion">Ubicación</string>
     <string name="info_subseccion">%s</string>
+    <string name="nombre_subseccion">%s</string>
+    <string name="nombre_director">%s</string>
+    <string name="telefono_director">%s</string>
+    <string name="mail_director">%s</string>
+    <string name="micrositio">%s</string>
+
     <string name="title_activity_activity_info">ActivityInfo</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

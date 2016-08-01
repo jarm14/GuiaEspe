@@ -1,7 +1,5 @@
 package com.example.espeguiada;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by adrian on 28/03/16.
  */
@@ -25,10 +23,11 @@ public class SUBSECCION {
     private boolean deleted;
 
     private String SUB_LOGO;
+    private String SUB_MICROSITIO;
 
     public SUBSECCION(){}
 
-    public SUBSECCION(String id, String SEC_ID, String EDI_ID, String SUB_NOMBRE, String SUB_DESCRIPCION, String SUB_UBICACION, String SUB_LOGO, boolean deleted) {
+    public SUBSECCION(String id, String SEC_ID, String EDI_ID, String SUB_NOMBRE, String SUB_DESCRIPCION, String SUB_UBICACION, String SUB_LOGO, String SUB_MICROSITIO, boolean deleted) {
         this.setId(id);
         this.setSEC_ID(SEC_ID);
         this.setEDI_ID(EDI_ID);
@@ -36,6 +35,7 @@ public class SUBSECCION {
         this.SUB_DESCRIPCION = SUB_DESCRIPCION;
         this.SUB_UBICACION = SUB_UBICACION;
         this.SUB_LOGO=SUB_LOGO;
+        this.setSUB_MICROSITIO(SUB_MICROSITIO);
 
         //this.SUB_LOGO = SUB_LOGO;
         this.deleted = deleted;
@@ -115,5 +115,13 @@ public class SUBSECCION {
 
     public void setSUB_LOGO(String SUB_LOGO) {
         this.SUB_LOGO = SUB_LOGO;
+    }
+
+    public String getSUB_MICROSITIO() {
+        return SUB_MICROSITIO;
+    }
+
+    public void setSUB_MICROSITIO(String SUB_MICROSITIO) {
+        this.SUB_MICROSITIO = SUB_MICROSITIO;
     }
 }

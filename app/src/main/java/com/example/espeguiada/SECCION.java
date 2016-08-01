@@ -19,19 +19,7 @@ public class SECCION {
 
     public SECCION(){}
 
-    @Override
-    public String toString() {
-        return getSEC_NOMBRE();
-    }
 
-    /**
-     * Initializes a new ToDoItem
-     *
-     * @param nombre
-     *            The item nombre
-     * @param id
-     *            The item id
-     */
 
     public SECCION(String id, String nombre, String descripcion) {
         this.id=id;

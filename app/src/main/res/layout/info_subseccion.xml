@@ -13,41 +13,136 @@
         android:layout_weight="30"/>
 
     <TextView
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_informacion"
+        android:text="@string/nombre_subseccion"
         android:id="@+id/txtTitleInfo"
         android:layout_gravity="center"
-        android:textSize="40sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#088A08"
         android:layout_weight="1"/>
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="50">
+        android:layout_weight="60"
+        android:paddingBottom="5dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:text="@string/info_subseccion"
             android:id="@+id/txtInfoSubseccion"/>
     </ScrollView>
-    <TextView
-        android:layout_width="wrap_content"
+
+    <TableRow
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txtTitleMap"
-        android:text="@string/title_ubicacion"
-        android:layout_gravity="center"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:textColor="#088A08"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Director:"
+            android:id="@+id/txtTitNombreDirector"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/nombre_director"
+            android:id="@+id/txtNombreDirector"
+            android:layout_weight="2" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="    E-Mail:"
+            android:id="@+id/txtTitMailDirector"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/nombre_director"
+            android:id="@+id/txtMailDirector"
+            android:layout_weight="2" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="    Teléfono:"
+            android:id="@+id/txtTitTelfDirector"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/nombre_director"
+            android:id="@+id/txtTelfDirector"
+            android:layout_weight="2" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Micrositio:"
+            android:id="@+id/txtTitMicrositio"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/micrositio"
+            android:id="@+id/txtMicrositio"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:layout_weight="2" />
+    </TableRow>
+
+
     <Button
+        android:id="@+id/btnMaps"
         android:layout_width="96dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         style="@android:style/Widget.Material.Button"
-        android:layout_weight="7.71"
+        android:layout_weight="5"
         android:enabled="true"
         android:text="Mapas"
 

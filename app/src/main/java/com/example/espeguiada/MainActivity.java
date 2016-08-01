@@ -71,9 +71,9 @@ public class MainActivity extends Activity {
     List<String>departamentos;
     List<String>otros;
 
-    /*Variable para la coneccion sql*/
+    /*Variable para la conexion sql*/
     Connection conexion;
-
+    Connection conexion1;
 
     /**
      * Adapter to sync the items list with the view
@@ -87,28 +87,7 @@ public class MainActivity extends Activity {
     private ProgressBar mProgressBar;
 
 
-    /*private Connection CONN ()
-    {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        Connection conn = null;
 
-        //String azure = "jdbc:jtds:sqlserver://lugaresespe.database.windows.net:1433;database=LugaresEspe;user=GuiaEspe@lugaresespe;password=Admin112358.;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-        String conect ="jdbc:jtds:sqlserver://10.9.9.175:1433;database=LugaresEspe;user=usguia;password=Admin112358.;loginTimeout=30;";
-
-        try {
-
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            conn = DriverManager.getConnection(conect);
-
-        } catch (SQLException se) {
-            Log.e("ERROR", se.getMessage());
-        } catch (Exception e) {
-            Log.e("ERRO", e.getMessage());
-        }
-
-        return conn;
-    }*/
 
     /**
      * Initializes the activity
@@ -144,7 +123,7 @@ public class MainActivity extends Activity {
           //  coneccion.close();
 
         } catch (Exception e) {
-            createAndShowDialog(e, "Error");
+            createAndShowDialog("No se pudo conectar al servidor. Revise su conexión a Internet.", "Error");
         }
 
         //exp_sections=(ExpandableListView)findViewById(R.id.expandableListView);
@@ -162,26 +141,7 @@ public class MainActivity extends Activity {
 
                 subseccion=getSubseccionItem(subsecName);
 
-                /*switch(subsecOpt){
-                    case "Secretaria General":
-                        subseccion=new SUBSECCION("1","1","1","Secretaría general", "La Secretaría general se encarga de aldsfkjhalsknclkajsdhflkashdfkljadshlkfhasldkfhasljkfdlajfdhladksjfhlaksjfhladskjfhlakfhasdlfjsk" +
-                                "lfhlkaHDLKSDlkjHADLKJSDJkhlhlJDHLJSAHDLASJFHLDJAHLFSJDHGLKJDGLJSHLlaksjdfhlajfh lajshflkaj flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas", R.drawable.map_secretaria_general ,false );
-                        break;
-                    case "Unidad de Auditoria Interna":
-                        //subseccion=new SUBSECCION("2","1","1","Honorable consejo universitario", "El Honorable consejo universitario se encarga de  flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas",null, 0, false );
-                        subseccion=getSubseccionItem(subsecOpt);
-                        break;
-                    case "Unidad de Talento humano":
-                        subseccion=new SUBSECCION("1","2","1","Unidad de Talento humano", "La Unidad de Talento humano se encarga de  flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas",0 ,false );
-                        break;
-                    case "Unidad Financiera":
-                        subseccion=new SUBSECCION("2","2","1","Unidad Financiera", "La Unidad Financiera se encarga de  flkjasdfhlkjdashf klasdfh alksdfh alsfh ", "ubicacion_coordenadas",0, false );
-                        break;
-                    default:
-                        subseccion=new SUBSECCION("1","1","1","Vacio", "vacio ", "ubicacion_coordenadas",0, false );
-                        break;
 
-                }*/
 
                 nextActivity(v,subseccion);
                 return false;
@@ -206,14 +166,62 @@ public class MainActivity extends Activity {
         try{
             Statement statement = conexion.createStatement();
             itemSubseccion = statement.executeQuery(sql);
-                itemSubseccion.next();
-                subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"), itemSubseccion.getString("SUB_LOGO"), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
-                return subseccion;
+            itemSubseccion.next();
+            subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"), itemSubseccion.getString("SUB_LOGO"), itemSubseccion.getString("SUB_MICROSITIO"), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
+            return subseccion;
 
 
 
         }catch(SQLException se){
-            System.out.println("Error: " + se.toString());
+            System.out.println("Error: " + "No se pudo conectar al servidor. Revise su conexión a Internet.");
+        }
+
+
+
+        return null;
+
+    }
+
+    private String getCoord(String edi_id){
+        ResultSet Coord;
+        String coordinates;
+        String sql1="use LugaresEspe; select EDI_UBICACION from EDIFICIO where id='"+edi_id+"'";
+        try{
+            Statement statement = conexion.createStatement();
+            Coord = statement.executeQuery(sql1);
+            Coord.next();
+            coordinates=Coord.getString("EDI_UBICACION");
+            return coordinates;
+
+
+
+        }catch(SQLException se){
+            System.out.println("Error: " + "No se pudo conectar al servidor. Revise su conexión a Internet.");
+        }
+
+
+
+        return null;
+
+    }
+
+
+
+    private DIRECTORDEP getDirectorItem(String Subseccionid){
+        ResultSet itemDirector;
+        DIRECTORDEP director;
+        String sql="use LugaresEspe; select * from DIRECTORDEP where SUB_ID='"+Subseccionid+"'";
+        try{
+            Statement statement = conexion.createStatement();
+            itemDirector = statement.executeQuery(sql);
+            itemDirector.next();
+            director = new DIRECTORDEP(itemDirector.getString("id"), itemDirector.getString("SUB_ID"), itemDirector.getString("DIR_NOMBRE"), itemDirector.getString("DIR_APELLIDO"), itemDirector.getString("DIR_MAIL"), itemDirector.getString("DIR_TELEFONO"),itemDirector.getString("DIR_ABTITULO"));
+            return director;
+
+
+
+        }catch(SQLException se){
+            System.out.println("Error: " + "No se pudo conectar al servidor. Revise su conexión a Internet.");
         }
 
         return null;
@@ -361,67 +369,56 @@ public class MainActivity extends Activity {
 
 
 
-    /*private class ProgressFilter implements ServiceFilter {
 
-        @Override
-        public ListenableFuture<ServiceFilterResponse> handleRequest(ServiceFilterRequest request, NextServiceFilterCallback nextServiceFilterCallback) {
-
-            final SettableFuture<ServiceFilterResponse> resultFuture = SettableFuture.create();
-
-
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                }
-            });
-
-            ListenableFuture<ServiceFilterResponse> future = nextServiceFilterCallback.onNext(request);
-
-            Futures.addCallback(future, new FutureCallback<ServiceFilterResponse>() {
-                @Override
-                public void onFailure(Throwable e) {
-                    resultFuture.setException(e);
-                }
-
-                @Override
-                public void onSuccess(ServiceFilterResponse response) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.GONE);
-                        }
-                    });
-
-                    resultFuture.set(response);
-                }
-            });
-
-            return resultFuture;
-        }
-    }*/
     final static String ACT_INFO="com.example.espeguiada.ActivityInfo";
 
     public void nextActivity(View view, SUBSECCION subseccion){
 
-        String[] info=new String[3];
+        DIRECTORDEP director=getDirectorItem(subseccion.getId().toString());
+
+        String[] info=new String[8];
 
 
 
         info[0]=subseccion.getSUB_NOMBRE().toString();
-
-        if(subseccion.getSUB_DESCRIPCION().isEmpty())
-        {
-            subseccion.setSUB_DESCRIPCION(" ");
-            info[1]=subseccion.getSUB_DESCRIPCION().toString();
-        }else
-        {
-            info[1]=subseccion.getSUB_DESCRIPCION().toString();
-        }
+        info[1]=subseccion.getSUB_DESCRIPCION().toString();
         info[2]=subseccion.getSUB_LOGO();
 
+        if(director.getDIR_ABTITULO()==null)
+        {
+            director.setDIR_ABTITULO(" ");
+        }
+
+        if(director.getDIR_APELLIDO()==null)
+        {
+            director.setDIR_APELLIDO(" ");
+        }
+
+        if(director.getDIR_NOMBRE()==null)
+        {
+            director.setDIR_NOMBRE(" ");
+        }
+
+        if(director.getDIR_MAIL()==null)
+        {
+            director.setDIR_MAIL(" ");
+        }
+
+        if(director.getDIR_TELEFONO()==null)
+        {
+            director.setDIR_TELEFONO(" ");
+        }
+
+        if(subseccion.getSUB_MICROSITIO()==null)
+        {
+            subseccion.setSUB_MICROSITIO(" ");
+        }
+
+        info[3] = director.getDIR_ABTITULO().toString() + ". " + director.getDIR_NOMBRE().toString() + " " + director.getDIR_APELLIDO().toString();
+        info[4] = director.getDIR_MAIL().toString();
+        info[5] = director.getDIR_TELEFONO().toString();
+        info[6]=subseccion.getSUB_MICROSITIO().toString();
+        info[7]= this.getCoord(subseccion.getEDI_ID());
 
         Intent act=new Intent(this,ActivityInfo.class);
         act.putExtra(ACT_INFO, info);
