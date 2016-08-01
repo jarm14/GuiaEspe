@@ -210,15 +210,24 @@ public class MainActivity extends Activity {
     private DIRECTORDEP getDirectorItem(String Subseccionid){
         ResultSet itemDirector;
         DIRECTORDEP director;
+        String sub;
+
         String sql="use LugaresEspe; select * from DIRECTORDEP where SUB_ID='"+Subseccionid+"'";
         try{
             Statement statement = conexion.createStatement();
             itemDirector = statement.executeQuery(sql);
             itemDirector.next();
-            director = new DIRECTORDEP(itemDirector.getString("id"), itemDirector.getString("SUB_ID"), itemDirector.getString("DIR_NOMBRE"), itemDirector.getString("DIR_APELLIDO"), itemDirector.getString("DIR_MAIL"), itemDirector.getString("DIR_TELEFONO"),itemDirector.getString("DIR_ABTITULO"));
+
+            director = new DIRECTORDEP();
+            director.setId(itemDirector.getString("id"));
+            director.setSUB_ID(itemDirector.getString("SUB_ID"));
+            director.setDIR_NOMBRE(itemDirector.getString("DIR_NOMBRE"));
+            director.setDIR_APELLIDO(itemDirector.getString("DIR_APELLIDO"));
+            director.setDIR_MAIL(itemDirector.getString("DIR_MAIL"));
+            director.setDIR_TELEFONO(itemDirector.getString("DIR_TELEFONO"));
+            director.setDIR_ABTITULO(itemDirector.getString("DIR_ABTITULO"));
+
             return director;
-
-
 
         }catch(SQLException se){
             System.out.println("Error: " + "No se pudo conectar al servidor. Revise su conexión a Internet.");
@@ -372,17 +381,31 @@ public class MainActivity extends Activity {
 
     final static String ACT_INFO="com.example.espeguiada.ActivityInfo";
 
-    public void nextActivity(View view, SUBSECCION subseccion){
+    public void nextActivity(View view, SUBSECCION subseccion) {
 
-        DIRECTORDEP director=getDirectorItem(subseccion.getId().toString());
+        DIRECTORDEP director = getDirectorItem(subseccion.getId().toString());
 
-        String[] info=new String[8];
+        if(director==null)
+        {
+            director = new DIRECTORDEP();
+        }
 
+        String[] info = new String[8];
 
+        if (subseccion.getSUB_NOMBRE() == null)
+        {
+            subseccion.setSUB_NOMBRE(" ");
+        }
 
-        info[0]=subseccion.getSUB_NOMBRE().toString();
-        info[1]=subseccion.getSUB_DESCRIPCION().toString();
-        info[2]=subseccion.getSUB_LOGO();
+        if(subseccion.getSUB_DESCRIPCION()==null)
+        {
+            subseccion.setSUB_DESCRIPCION(" ");
+        }
+
+        if(subseccion.getSUB_LOGO()==null)
+        {
+            subseccion.setSUB_LOGO(" ");
+        }
 
         if(director.getDIR_ABTITULO()==null)
         {
@@ -414,6 +437,9 @@ public class MainActivity extends Activity {
             subseccion.setSUB_MICROSITIO(" ");
         }
 
+        info[0]=subseccion.getSUB_NOMBRE().toString();
+        info[1]=subseccion.getSUB_DESCRIPCION().toString();
+        info[2]=subseccion.getSUB_LOGO();
         info[3] = director.getDIR_ABTITULO().toString() + ". " + director.getDIR_NOMBRE().toString() + " " + director.getDIR_APELLIDO().toString();
         info[4] = director.getDIR_MAIL().toString();
         info[5] = director.getDIR_TELEFONO().toString();
