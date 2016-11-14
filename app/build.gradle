@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
-    buildToolsVersion '23.0.0'
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.example.espeguiada"
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -31,11 +31,15 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.microsoft.azure:azure-mobile-android:3.0'
     compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@jar'
-    compile 'com.google.android.gms:play-services-maps:9.2.1'
-    compile 'com.google.android.gms:play-services-location:9.2.1'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.google.android.gms:play-services-ads:9.2.1'
-    compile 'com.google.android.gms:play-services-base:9.2.1'
-    compile 'com.google.android.gms:play-services-identity:9.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.google.android.gms:play-services-location:9.8.0'
+    compile 'com.google.android.gms:play-services-ads:9.8.0'
+    compile 'com.google.android.gms:play-services-base:9.8.0'
+    compile 'com.google.android.gms:play-services-identity:9.8.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.google.android.gms:play-services-ads:9.8.0'
+    compile 'com.google.android.gms:play-services-base:9.8.0'
+    compile 'com.google.android.gms:play-services-identity:9.8.0'
     compile 'com.google.maps.android:android-maps-utils:0.4.+'
+    compile 'com.android.support:design:24.2.1'
 }

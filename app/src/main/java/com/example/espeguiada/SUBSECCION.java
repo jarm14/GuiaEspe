@@ -21,14 +21,13 @@ public class SUBSECCION {
     //@com.google.gson.annotations.SerializedName("SUB_LOGO")
     //private Bitmap SUB_LOGO;
     @com.google.gson.annotations.SerializedName("deleted")
-    private boolean deleted;
 
     private String SUB_LOGO;
     private String SUB_MICROSITIO;
 
     public SUBSECCION(){}
 
-    public SUBSECCION(String id, String SEC_ID, String EDI_ID, String SUB_NOMBRE, String SUB_DESCRIPCION, String SUB_UBICACION,String SUB_INSTRUCCIONES, String SUB_LOGO, String SUB_MICROSITIO, boolean deleted) {
+    public SUBSECCION(String id, String SEC_ID, String EDI_ID, String SUB_NOMBRE, String SUB_DESCRIPCION, String SUB_UBICACION,String SUB_INSTRUCCIONES, String SUB_LOGO, String SUB_MICROSITIO) {
         this.setId(id);
         this.setSEC_ID(SEC_ID);
         this.setEDI_ID(EDI_ID);
@@ -40,7 +39,6 @@ public class SUBSECCION {
         this.SUB_INSTRUCCIONES=SUB_INSTRUCCIONES;
 
         //this.SUB_LOGO = SUB_LOGO;
-        this.deleted = deleted;
     }
 
 
@@ -77,13 +75,6 @@ public class SUBSECCION {
         this.SUB_LOGO = SUB_LOGO;
     }*/
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 
 
 

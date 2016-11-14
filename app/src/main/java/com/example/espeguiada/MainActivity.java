@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
             Statement statement = conexion.createStatement();
             itemSubseccion = statement.executeQuery(sql);
             itemSubseccion.next();
-            subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"),itemSubseccion.getString("SUB_INSTRUCCIONES"), itemSubseccion.getString("SUB_LOGO"), itemSubseccion.getString("SUB_MICROSITIO"), Boolean.parseBoolean(itemSubseccion.getString("deleted")));
+            subseccion = new SUBSECCION(itemSubseccion.getString("id"), itemSubseccion.getString("SEC_ID"), itemSubseccion.getString("EDI_ID"), itemSubseccion.getString("SUB_NOMBRE"), itemSubseccion.getString("SUB_DESCRIPCION"), itemSubseccion.getString("SUB_UBICACION"),itemSubseccion.getString("SUB_INSTRUCCIONES"), itemSubseccion.getString("SUB_LOGO"), itemSubseccion.getString("SUB_MICROSITIO"));
             return subseccion;
 
 
