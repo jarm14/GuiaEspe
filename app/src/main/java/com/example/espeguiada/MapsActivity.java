@@ -1,8 +1,15 @@
 package com.example.espeguiada;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -14,8 +21,15 @@ import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,11 +41,14 @@ import com.google.maps.android.kml.KmlLayer;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private Ubicacion ub;
@@ -42,6 +59,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private PolylineOptions polyop;
     private Polyline polyline;
 
+    protected GoogleApiClient googleApiClient;
+    Location lu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,28 +70,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ub = new Ubicacion(this);
-        Intent intent=getIntent();
-        info=intent.getStringArrayExtra(ActivityInfo.ACT_INFO);
 
-        final FloatingActionButton refresh=(FloatingActionButton) findViewById(R.id.refresh);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                polyline.remove();
+        Intent intent = getIntent();
+        info = intent.getStringArrayExtra(ActivityInfo.ACT_INFO);
 
-                generarRuta(new LatLng(ub.getLatitud(),ub.getLongitud()),new LatLng(lat,len));
-                Interpolator inter= new OvershootInterpolator();
-                //AnimationUtils.loadInterpolator(getApplicationContext(),android.R.interpolator.fast_out_slow_in);
-                ViewCompat.animate(refresh).rotation(360f).setDuration(1000).setInterpolator(inter).start();
-                Snackbar snack=Snackbar.make(view,"Ruta generada nuevamente",Snackbar.LENGTH_LONG);
-                View snackView=snack.getView();
-                snackView.setBackgroundColor(Color.BLACK);
-                TextView textSnack=(TextView) snackView.findViewById(android.support.design.R.id.snackbar_text);
-                textSnack.setTextColor(Color.WHITE);
-                snack.setDuration(1500).show();
-            }
-        });
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    protected synchronized void buildGoogleApiClient(){
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    public void obtenerUbicacion() {
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
     }
 
 
@@ -88,7 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         try {
-            KmlLayer layerESPE=new KmlLayer(mMap,R.raw.espekml2,getApplicationContext());
+            KmlLayer layerESPE = new KmlLayer(mMap, R.raw.espekml2, getApplicationContext());
             layerESPE.addLayerToMap();
         } catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -114,81 +151,193 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setTiltGesturesEnabled(true);
 
-        }else
-        {
+        } else {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setTiltGesturesEnabled(true);
 
         }
-        generarRuta(new LatLng(ub.getLatitud(),ub.getLongitud()),new LatLng(lat,len));
+
+
+        /*GoogleApiClient googleApiClient=new GoogleApiClient() {
+            @Override
+            public boolean hasConnectedApi(@NonNull Api<?> api) {
+                return false;
+            }
+
+            @NonNull
+            @Override
+            public ConnectionResult getConnectionResult(@NonNull Api<?> api) {
+                return null;
+            }
+
+            @Override
+            public void connect() {
+
+            }
+
+            @Override
+            public ConnectionResult blockingConnect() {
+                return null;
+            }
+
+            @Override
+            public ConnectionResult blockingConnect(long l, @NonNull TimeUnit timeUnit) {
+                return null;
+            }
+
+            @Override
+            public void disconnect() {
+
+            }
+
+            @Override
+            public void reconnect() {
+
+            }
+
+            @Override
+            public PendingResult<Status> clearDefaultAccountAndReconnect() {
+                return null;
+            }
+
+            @Override
+            public void stopAutoManage(@NonNull FragmentActivity fragmentActivity) {
+
+            }
+
+            @Override
+            public boolean isConnected() {
+                return false;
+            }
+
+            @Override
+            public boolean isConnecting() {
+                return false;
+            }
+
+            @Override
+            public void registerConnectionCallbacks(@NonNull ConnectionCallbacks connectionCallbacks) {
+
+            }
+
+            @Override
+            public boolean isConnectionCallbacksRegistered(@NonNull ConnectionCallbacks connectionCallbacks) {
+                return false;
+            }
+
+            @Override
+            public void unregisterConnectionCallbacks(@NonNull ConnectionCallbacks connectionCallbacks) {
+
+            }
+
+            @Override
+            public void registerConnectionFailedListener(@NonNull OnConnectionFailedListener onConnectionFailedListener) {
+
+            }
+
+            @Override
+            public boolean isConnectionFailedListenerRegistered(@NonNull OnConnectionFailedListener onConnectionFailedListener) {
+                return false;
+            }
+
+            @Override
+            public void unregisterConnectionFailedListener(@NonNull OnConnectionFailedListener onConnectionFailedListener) {
+
+            }
+
+            @Override
+            public void dump(String s, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strings) {
+
+            }
+        };*/
+
+        //lu = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+
+        //generarRuta(new LatLng(lu.getLatitude(), lu.getLongitude()), new LatLng(lat, len));
+        final FloatingActionButton refresh = (FloatingActionButton) findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                polyline.remove();
+                buildGoogleApiClient();
+                //generarRuta(new LatLng(lu.getLatitude(), lu.getLongitude()), new LatLng(lat, len));
+                //generarRuta(new LatLng(ub.getLatitud(), ub.getLongitud()), new LatLng(lat, len));
+                Interpolator inter = new OvershootInterpolator();
+                //AnimationUtils.loadInterpolator(getApplicationContext(),android.R.interpolator.fast_out_slow_in);
+                ViewCompat.animate(refresh).rotation(360f).setDuration(1000).setInterpolator(inter).start();
+                Snackbar snack = Snackbar.make(view, "Ruta generada nuevamente", Snackbar.LENGTH_LONG);
+                View snackView = snack.getView();
+                snackView.setBackgroundColor(Color.BLACK);
+                TextView textSnack = (TextView) snackView.findViewById(android.support.design.R.id.snackbar_text);
+                textSnack.setTextColor(Color.WHITE);
+                snack.setDuration(1500).show();
+            }
+        });
     }
 
-    private void coordenadas()
-    {
-        String aux=info[7];
+
+
+    private void coordenadas() {
+        String aux = info[7];
         String[] latlen;
-        latlen=aux.split(",");
-        lat=Double.parseDouble(latlen[0]);
-        len=Double.parseDouble(latlen[1]);
+        latlen = aux.split(",");
+        lat = Double.parseDouble(latlen[0]);
+        len = Double.parseDouble(latlen[1]);
     }
 
-    private void generarRuta(LatLng ini, LatLng fin)
-    {
-        polyop=new PolylineOptions();
-        LatLng inicio,aux1,aux2 = null,aux3 = null;
-        double disT=0,disP=0,latP=0,lonP=0,disAux=0,disMin=0,disAuxT=0;
-        int index=0;
+    private void generarRuta(LatLng ini, LatLng fin) {
+        polyop = new PolylineOptions();
+        LatLng inicio, aux1, aux2 = null, aux3 = null;
+        double disT = 0, disP = 0, latP = 0, lonP = 0, disAux = 0, disMin = 0, disAuxT = 0;
+        int index = 0;
         String[] latleng;
-        inicio=ini;//new LatLng(-0.312775, -78.445559);
+        inicio = ini;//new LatLng(-0.312775, -78.445559);
         //fin=new LatLng(-0.31387,-78.44494);
-        disT= SphericalUtil.computeDistanceBetween(inicio,fin);
-        aux1=inicio;
-        disP=disT;
+        disT = SphericalUtil.computeDistanceBetween(inicio, fin);
+        aux1 = inicio;
+        disP = disT;
         polyop.add(inicio);
         do {
-            disMin=disP;
-            for(int i=0;i<puntos.size();i++)
-            {
-                latleng=puntos.get(i).split(",");
-                latP=Double.parseDouble(latleng[0]);
-                lonP=Double.parseDouble(latleng[1]);
-                aux2=new LatLng(latP,lonP);
-                disAux=SphericalUtil.computeDistanceBetween(aux1,aux2);
-                disAuxT=SphericalUtil.computeDistanceBetween(aux2,fin);
-                if(disAux<=disMin &&  disAux<disT && disAux!=0 && disAuxT<disP)
-                {
-                    disMin=disAux;
-                    index=i;
+            disMin = disP;
+            for (int i = 0; i < puntos.size(); i++) {
+                latleng = puntos.get(i).split(",");
+                latP = Double.parseDouble(latleng[0]);
+                lonP = Double.parseDouble(latleng[1]);
+                aux2 = new LatLng(latP, lonP);
+                disAux = SphericalUtil.computeDistanceBetween(aux1, aux2);
+                disAuxT = SphericalUtil.computeDistanceBetween(aux2, fin);
+                if (disAux <= disMin && disAux < disT && disAux != 0 && disAuxT < disP) {
+                    disMin = disAux;
+                    index = i;
                 }
-                if(aux1==fin)
-                {
-                    index=i;
+                if (aux1 == fin) {
+                    index = i;
                 }
 
             }
-            latleng=puntos.get(index).split(",");
-            latP=Double.parseDouble(latleng[0]);
-            lonP=Double.parseDouble(latleng[1]);
-            aux3=new LatLng(latP,lonP);
+            latleng = puntos.get(index).split(",");
+            latP = Double.parseDouble(latleng[0]);
+            lonP = Double.parseDouble(latleng[1]);
+            aux3 = new LatLng(latP, lonP);
             polyop.add(aux3);
-            aux1=aux3;
-            disP=SphericalUtil.computeDistanceBetween(aux1,fin);
-        }while(disP!=0.0);
+            aux1 = aux3;
+            disP = SphericalUtil.computeDistanceBetween(aux1, fin);
+        } while (disP != 0.0);
         polyop.add(fin);
         dibujarRuta(polyop);
     }
 
-    private void dibujarRuta(PolylineOptions options){
+    private void dibujarRuta(PolylineOptions options) {
         polyline = mMap.addPolyline(options);
         polyline.setWidth(5);
         polyline.setColor(Color.BLUE);
         polyline.setGeodesic(true);
     }
 
-    private void inicializarLista()
-    {
-        puntos=new ArrayList<String>();
+    private void inicializarLista() {
+        puntos = new ArrayList<String>();
         puntos.add("-0.31509,-78.44228");
         puntos.add("-0.315,-78.44296");
         puntos.add("-0.3149,-78.44314");
@@ -292,4 +441,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        lu = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (lu != null) {
+            generarRuta(new LatLng(lu.getLatitude(), lu.getLongitude()), new LatLng(lat, len));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
 }

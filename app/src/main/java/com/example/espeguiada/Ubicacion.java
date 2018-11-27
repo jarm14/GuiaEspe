@@ -63,7 +63,7 @@ public class Ubicacion implements LocationListener {
                 longitud=lc.getLongitude();
                 StringBuilder sbuilder= new StringBuilder();
                 sbuilder.append("Latitud: ").append(lc.getLatitude()).append(" Longitud:").append(lc.getLongitude());
-                Toast.makeText(ctx, sbuilder.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(ctx, sbuilder.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }

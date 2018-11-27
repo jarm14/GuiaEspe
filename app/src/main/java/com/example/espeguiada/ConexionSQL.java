@@ -19,10 +19,10 @@ public class ConexionSQL {
 
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-
-                ConnectionURL = "jdbc:jtds:sqlserver://190.10.161.195:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=5;";
+            connection = DriverManager.getConnection("jdbc:jtds:sqlserver://tmet-espe.database.windows.net:1433/LugaresEspe; ssl=require","Administrador@tmet-espe","Admin112358.");
+                //ConnectionURL = "jdbc:jtds:sqlserver://190.10.161.195:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=5;";
                 //jdbc:jtds:sqlserver://190.10.161.195:1433;database=LugaresEspe;user=sa;password=Joelram5635726.;loginTimeout=5;
-                connection = DriverManager.getConnection(ConnectionURL);
+                //connection = DriverManager.getConnection(ConnectionURL);
 
         } catch (SQLException se) {
             //Log.e("ERROR", se.getMessage());
